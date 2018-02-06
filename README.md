@@ -8,10 +8,11 @@ The SC2 Pay plugin allows the payment process to be handled in a modal popup win
 
 ## HTML Page Setup
 The SC2 Pay library requires the following dependencies:
-- Bootstrap CSS
-- Bootstrap JS Library
-- jQuery JS Library
-- SteemConnect V2 JS Library
+- [Bootstrap CSS](https://getbootstrap.com/docs/3.3/getting-started/)
+- [Bootstrap JS Library](https://getbootstrap.com/docs/3.3/getting-started/)
+- [jQuery JS Library](https://jquery.com/)
+- [Steem JS Library](https://github.com/steemit/steem-js)
+- [SteemConnect V2 JS Library](https://github.com/steemit/sc2-sdk)
 
 Include all of the required libraries in the <head> element of your HTML page as shown below:
 
@@ -24,6 +25,9 @@ Include all of the required libraries in the <head> element of your HTML page as
 
 <!-- Bootstrap JS Library -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<!-- Steem JS Library -->
+<script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
 
 <!-- SteemConnect V2 JS Library -->
 <script src="https://steemit.github.io/sc2-angular/sc2.min.js"></script>
