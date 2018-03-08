@@ -20,6 +20,16 @@
           }
         })
       }
+
+      function testPurchaseVessel() {
+        sc2_pay.requestPaymentVessel('SC2-Pay Test Payment', 'yabapmatt', 0.1, 'STEEM', 'payment id / memo', function(trans) {
+          if(trans) {
+            $('#result').val('Purchase Success!\r\nTransaction Details:\r\n' + JSON.stringify(trans));
+          } else {
+            $('#result').val('Purchase cancelled.');
+          }
+        })
+      }
     </script>
 </head>
 <body>
@@ -31,7 +41,8 @@
           <h4 class="panel-title">Test / Example page for the SC2-Pay JavaScript library</h4>
         </div>
       <div class="panel-body">
-        <button onclick="testPurchase()">Test Purchase</button><br/>
+        <button onclick="testPurchase()">Test Purchase</button>&nbsp;&nbsp;
+        <button onclick="testPurchaseVessel()">Test Purchase with Vessel</button><br/>
         Call: sc2_pay.requestPayment('SC2-Pay Test Payment', 'yabapmatt', 0.1, 'STEEM', 'payment id / memo', callback);
 
         <div style="margin-top: 20px;">

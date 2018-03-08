@@ -17,14 +17,34 @@ var sc2_pay = (function() {
     checkSteemTransfer(to, amount, currency, memo, new Date(), callback);
   }
 
+  function requestPaymentVessel(title, to, amount, currency, memo, callback) {
+    if(currency != 'STEEM' && currency != 'SBD') {
+      console.log('Unsupported currency "' + currency + '". Supported currencies are "STEEM" or "SBD".');
+      return;
+    }
+
+    var transaction = JSON.stringify([['transfer', {
+      from: '',
+      to: to,
+      amount: amount.toFixed(3) + ' ' + currency,
+      memo: memo
+    }]]);
+
+    var url = 'steem://sign/tx/' + btoa(transaction) + '#eyJhbW91bnQiOnsicHJvbXB0IjpmYWxzZSwidHlwZSI6ImFzc2V0IiwibGFiZWwiOiJEb25hdGlvbiJ9LCJtZW1vIjp7InByb21wdCI6ZmFsc2UsInR5cGUiOiJ0ZXh0IiwibGFiZWwiOiJNZXNzYWdlIChPcHRpb25hbCkifSwidG8iOnsicHJvbXB0IjpmYWxzZSwidHlwZSI6InRleHQifX0=';
+    window.location = url;
+
+    checkSteemTransfer(to, amount, currency, memo, new Date(), callback, 0);
+  }
+
   function getCurrency(amount) {
     return amount.substr(amount.indexOf(' ') + 1);
   }
 
   var cancel_check = false;
-  function checkSteemTransfer(to, amount, currency, memo, date, callback) {
-      if (cancel_check || win.closed) {
+  function checkSteemTransfer(to, amount, currency, memo, date, callback, retries) {
+      if (cancel_check || (win && win.closed) || retries > 60) {
           cancel_check = false;
+          win = null;
 
           if (callback)
               callback(null);
@@ -59,7 +79,7 @@ var sc2_pay = (function() {
         }
 
         if (!confirmed)
-          setTimeout(function () { checkSteemTransfer(to, amount, currency, memo, date, callback); }, 2000);
+          setTimeout(function () { checkSteemTransfer(to, amount, currency, memo, date, callback, retries + 1); }, 2000);
       });
   }
 
@@ -83,5 +103,5 @@ var sc2_pay = (function() {
     return newWindow;
   }
 
-  return { requestPayment: requestPayment };
+  return { requestPayment: requestPayment, requestPaymentVessel: requestPaymentVessel };
 })();
