@@ -1,5 +1,8 @@
 var sc2_pay = (function() {
   var win = null;
+  var options = {
+    check_transfer: true
+  };
 
   function requestPayment(title, to, amount, currency, memo, callback) {
     if(currency != 'STEEM' && currency != 'SBD') {
@@ -14,7 +17,9 @@ var sc2_pay = (function() {
     });
 
     win = popupCenter(url, 'sc2-pay-test', 500, 560);
-    checkSteemTransfer(to, amount, currency, memo, new Date(), callback);
+
+    if(options.check_transfer)
+      checkSteemTransfer(to, amount, currency, memo, new Date(), callback);
   }
 
   function requestPaymentVessel(title, to, amount, currency, memo, callback) {
@@ -33,7 +38,12 @@ var sc2_pay = (function() {
     var url = 'steem://sign/tx/' + btoa(transaction) + '#eyJhbW91bnQiOnsicHJvbXB0IjpmYWxzZSwidHlwZSI6ImFzc2V0IiwibGFiZWwiOiJEb25hdGlvbiJ9LCJtZW1vIjp7InByb21wdCI6ZmFsc2UsInR5cGUiOiJ0ZXh0IiwibGFiZWwiOiJNZXNzYWdlIChPcHRpb25hbCkifSwidG8iOnsicHJvbXB0IjpmYWxzZSwidHlwZSI6InRleHQifX0=';
     window.location = url;
 
-    checkSteemTransfer(to, amount, currency, memo, new Date(), callback, 0);
+    if(options.check_transfer)
+      checkSteemTransfer(to, amount, currency, memo, new Date(), callback, 0);
+  }
+
+  function setOptions(new_options) {
+    options = new_options;
   }
 
   function getCurrency(amount) {
@@ -42,7 +52,7 @@ var sc2_pay = (function() {
 
   var cancel_check = false;
   function checkSteemTransfer(to, amount, currency, memo, date, callback, retries) {
-      if (cancel_check || (win && win.closed) || retries > 60) {
+      if (cancel_check || retries > 60) {
           cancel_check = false;
           win = null;
 
@@ -83,6 +93,11 @@ var sc2_pay = (function() {
       });
   }
 
+  function close() {
+    if(win)
+      win.close();
+  }
+
   function popupCenter(url, title, w, h) {
     // Fixes dual-screen position                         Most browsers      Firefox
     var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
@@ -103,5 +118,5 @@ var sc2_pay = (function() {
     return newWindow;
   }
 
-  return { requestPayment: requestPayment, requestPaymentVessel: requestPaymentVessel };
+  return { requestPayment: requestPayment, requestPaymentVessel: requestPaymentVessel, setOptions: setOptions, close: close };
 })();
